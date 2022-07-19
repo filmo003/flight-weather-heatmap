@@ -1,5 +1,5 @@
 # Flight-Weather-Heatmap
-#Overview
+# Overview
 This project is the works of efforts put forth by the ArcSquad team at the BRAVO-01 Hackathon. This project provides an intuitive method for displaying predictive and corelative weather data near USAF airfields. Data is processed and displayed on a 'heat-map' representing a confidence interval of wheather or not a sortie is expected to be able to be conducted. These metrics are predicted based on input aircraft operating parameters and local weather data. 
 
 # How to Contribute
