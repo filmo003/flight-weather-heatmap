@@ -1,0 +1,30 @@
+{
+  "name": "zprefix-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "knex migrate:latest && knex seed:run && node --max_old_space_size=2560 ./src/index.js",
+    "start:dev": "export NODE_ENV=development && knex migrate:latest && knex seed:run && nodemon --max_old_space_size=2560 --watch ./ ./src/index.js",
+    "test": "jest",
+    "lint": "eslint ./src/**/*.js ./db/**/*.js ./*.js"
+  },
+  "author": "Collin Gilmore",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "keycloak-connect": "^18.0.0",
+    "knex": "^1.0.4",
+    "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.13.0",
+    "eslint-plugin-jest": "^26.1.4",
+    "jest": "^27.5.1",
+    "nodemon": "^2.0.15"
+  }
+}
