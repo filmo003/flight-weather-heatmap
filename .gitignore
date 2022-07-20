@@ -26,3 +26,6 @@ yarn-error.log*
 /api/db/data/*
 */super-linter.log
 super-linter.log
+
+/.idea
+/venv

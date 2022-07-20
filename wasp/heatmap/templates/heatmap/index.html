@@ -1,0 +1,9 @@
+{% if weather_list %}
+    <ul>
+    {% for weather in weather_list %}
+        <li><a href="/heatmap/{{ weather.id }}/">{{ weather.base_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
