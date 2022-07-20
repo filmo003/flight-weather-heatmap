@@ -1,4 +1,12 @@
-django
-pandas
-numpy
-plotly
+django==4.0.1
+psycopg2==2.9.3
+requests==2.27.1
+bs4==0.0.1
+dpd_static_support==0.0.5
+bootstrap4==0.1.0
+numpy==1.23.1
+pandas==1.4.2
+dash==1.21
+django-plotly-dash==1.6.5
+Werkzeug==2.0.3
+openpyxl==3.0.10
