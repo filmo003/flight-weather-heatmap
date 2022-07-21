@@ -2,7 +2,7 @@ import os
 import csv
 import sqlite3
 import pandas as pd
-from aircrafts import Aircrafts
+from .aircrafts import Aircrafts
 
 class API:
     def __init__(self, csvFile, useMemory = False, deleteExisting = False):

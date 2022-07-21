@@ -34,9 +34,7 @@ connection = api.createDatabase()
 #This is how you cet Canx data for a specific base. Returns {Name, Month, Canx}
 
 
-#This is how you can query all base info. Returns {Name, Latitude, Longitude}
-bases = api.getBases()
-for base in bases: print(base)
+
 
 #This is how you can create your own custom query. Returns all results
 # custom = api.executeQuery("SELECT * FROM weatherData")
@@ -83,6 +81,12 @@ df_aircraft = pd.read_csv(os.getcwd() + "/heatmap/aircraftdata.csv")
 df_filtered_heatmap = df_heatmap.loc[df_heatmap['month'] == 1]
 df_base = df_heatmap.loc[df_heatmap['base_text'] == "BEALE"]
 selected_base = "BEALE AFB"
+selected_aircraft = df_aircraft['aircraft'][0]
+
+#This is how you can query all base info. Returns {Name, Latitude, Longitude}
+# bases = api.getBases()
+bases = df_filtered_heatmap['base_text']
+for base in bases: print(base)
 # Heatmap
 def drawHeatmap(df):
     return html.Div([
@@ -90,8 +94,8 @@ def drawHeatmap(df):
             dbc.CardBody([
                 dcc.Graph(id='heatmap',
                           figure=px.scatter_mapbox(df_filtered_heatmap, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["month", "Canx"],
-                        color="Canx", zoom=3, height=700, color_continuous_scale='Bluered', size="Marker Size")
-                            .update_layout(mapbox_style="dark", mapbox_accesstoken=token)
+                        color="Canx", zoom=3, height=650, color_continuous_scale='Bluered', size="Marker Size")
+                            .update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False)
                           .update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
                 ),
                 dcc.Slider(marks=months,
@@ -104,6 +108,20 @@ def drawHeatmap(df):
                 html.Div(id='slider-output-container', style={"width":"50%"},)
 
 
+            ])
+        ),
+    ])
+
+def drawBasemap(df):
+    return html.Div([
+        dbc.Card(
+            dbc.CardBody([
+                dcc.Graph(id='basemap',
+                          figure=px.scatter_mapbox(df, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["month", "Canx"],
+                        color="Canx", zoom=12, height=300, color_continuous_scale='Bluered', size="Marker Size")
+                            .update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False,)
+                          .update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+                ),
             ])
         ),
     ])
@@ -130,7 +148,7 @@ def drawAircraftDropdown(df):
 
 # Aircraft Dropdown
 def drawBaseDropdown(bases):
-    bases = np.array(bases)[:,0]
+    # bases = np.array(bases)[:,0]
     return html.Div([
         dbc.Card(
             dbc.CardBody([
@@ -145,14 +163,14 @@ def drawBaseDropdown(bases):
     ])
 
 def drawBaseHistogram(df, base="BEALE AFB"):
-    canx = np.array(api.getCanx(base))
-
+    # canx = np.array(api.getCanx(base, selected_aircraft))
+    canx = np.array([[1,2,3,4,5,6,7,8,9,10,11,12],[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]]).T
     df_base = df.loc[df['base_text']==base]
     return html.Div([
         dbc.Card(
             dbc.CardBody([
                 dcc.Graph(id='barchart',
-                    figure=px.bar(x=canx[:,1], y=canx[:,2], )
+                    figure=px.bar(x=canx[:,0], y=canx[:,1], height=250)
                     .update_layout(
                         template='plotly_dark',
                         plot_bgcolor='rgba(0, 0, 0, 0)',
@@ -187,14 +205,19 @@ app.layout = html.Div([
             dbc.Row([
                 dbc.Col([
                     drawHeatmap(df_heatmap)
-                ], width=8),
+                ], width=7),
                 dbc.Col([
-                    drawAircraftDropdown(df_aircraft),
-                    html.Br(),
-                    drawBaseDropdown(bases),
-                    drawBaseHistogram(df_heatmap, selected_base),
 
-                ], width=4),
+                    drawBaseDropdown(bases),
+                    drawBasemap(df_filtered_heatmap.loc[df_filtered_heatmap['base_text']==selected_base]),
+
+                    dbc.Row([
+                        dbc.Col([drawAircraftDropdown(df_aircraft)], width=6),
+                        dbc.Col([drawBaseHistogram(df_heatmap, selected_base)], width=6),
+                    ]),
+
+
+                ], width=5),
             ], align='center'),
             html.Br(),
             dbc.Row([
@@ -223,16 +246,18 @@ app.layout = html.Div([
 )
 def callback_color(month, aircraft, base):
     selected_base = base
+    selected_aircraft = aircraft
     df_filtered_heatmap = df_heatmap.loc[df_heatmap['month'] == month+1]
 
     fig = px.scatter_mapbox(df_filtered_heatmap, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["month", "Canx"],
-                        color="Canx", zoom=3, height=700, color_continuous_scale='Bluered', size="Marker Size")
+                        color="Canx", zoom=3, height=650, color_continuous_scale='Bluered', size="Marker Size")
 
-    fig.update_layout(mapbox_style="dark", mapbox_accesstoken=token)
+    fig.update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False)
 
     fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
-    canx2 = np.array(api.getCanx(base))
-    fig2 = px.bar(x=canx2[:, 1], y=canx2[:, 2], )
+    # canx = np.array(api.getCanx(base))
+    canx = np.array([[1,2,3,4,5,6,7,8,9,10,11,12],[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]]).T
+    fig2 = px.bar(x=canx[:, 0], y=canx[:, 1], )
     fig2.update_layout(
         template='plotly_dark',
         plot_bgcolor='rgba(0, 0, 0, 0)',
