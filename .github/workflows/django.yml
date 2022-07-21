@@ -27,5 +27,5 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        python ./wasp/manage.py test
-      working-directory: .
+        cd ./wasp
+        python manage.py test
