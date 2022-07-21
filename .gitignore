@@ -205,3 +205,5 @@ cython_debug/
 #.idea/
 
 *db.*
+/example_data
+example_data/KRDR_cleaned.csv
