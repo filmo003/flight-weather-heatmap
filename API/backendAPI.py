@@ -78,8 +78,17 @@ class API:
         else:
             print("Database already exists.")
         return self.__connection
+    
+    def executeQuery(self, query):
+        self.__cursor.execute(query)
+        return self.__cursor.fetchall()
 
     def getBases(self):
         self.__getBasesQuery = "SELECT DISTINCT base_text, latitude, longitude FROM " + self.__tableName
         self.__cursor.execute(self.__getBasesQuery)
+        return self.__cursor.fetchall()
+
+    def getCanx(self, baseName):
+        self.__getCanxQuery = "SELECT DISTINCT base_text, Month, canx FROM " + self.__tableName +" WHERE base_text = " + "'" + baseName + "'"
+        self.__cursor.execute(self.__getCanxQuery)
         return self.__cursor.fetchall()
