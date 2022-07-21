@@ -1,6 +1,22 @@
-from ssl import CHANNEL_BINDING_TYPES
-
-
+# global-Hawk' : {
+#                 'takeoffTime' : 8,
+#                 'takeoffWindow' : 4, 
+#                 'landingTIme' : 17,
+#                 'landingWindow' : 4,
+#                 'altitude' : 55000,
+#                 'crosswind' : 15,>
+#                 'maxwind' : 30,>
+#                 'windGust' : 10,>
+#                 'ceiling' : 1000,<
+#                 'visibility' : 0,<
+#                 'icing' : "med",>0.8
+#                 'highTemp' : 140,>
+#                 'lowTemp' : -40,<
+#                 'RCR' : 7,<
+#                 'thunderstorm' : 1,=
+#                 'freezingRain' : 1,=
+#                 'hail' : 1,=
+#                'fog' : 0},=
 class Aircrafts:
     def __init__(self):
         self.__aircrafts = {
@@ -46,4 +62,7 @@ class Aircrafts:
             }
 
     def getData(self, aircraft):
-        return self.__aircrafts[aircraft]
+        if (aircraft in self.__aircrafts):
+            return self.__aircrafts[aircraft]
+        else:
+            raise Exception("Aircrafts dictionary has no key: " + aircraft)
