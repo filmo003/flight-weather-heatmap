@@ -12,7 +12,7 @@ app = DjangoDash('SimpleExample')   # replaces dash.Dash
 
 import pandas as pd
 quakes = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/earthquakes-23k.csv')
-df = pd.read_csv(os.getcwd() + "\\heatmap\\mockdata.csv")
+df = pd.read_csv(os.getcwd() + "/heatmap/mockdata.csv")
 
 import plotly.graph_objects as go
 
