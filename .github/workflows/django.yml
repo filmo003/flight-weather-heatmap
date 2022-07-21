@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ "Dev" ]
 
-defaults:
-  run:
-    working-directory: .
-
 jobs:
   build:
 
@@ -32,3 +28,4 @@ jobs:
     - name: Run Tests
       run: |
         python ./wasp/manage.py test
+      working-directory: .
