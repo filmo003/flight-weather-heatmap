@@ -25,5 +25,6 @@ services:
 #    depends_on:
 #      - db
   test-service:
+    image: "${RUNNER_IMG}"
     depends_on:
       - web
