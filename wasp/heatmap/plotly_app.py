@@ -48,8 +48,8 @@ def drawText(text):
 
 # Data
 df1 = px.data.iris()
-df_heatmap = pd.read_csv(os.getcwd() + "\\heatmap\\monthly_f35_weather_canx.csv")
-df_aircraft = pd.read_csv(os.getcwd() + "\\heatmap\\aircraftdata.csv")
+df_heatmap = pd.read_csv(os.getcwd() + "/heatmap/monthly_f35_weather_canx.csv")
+df_aircraft = pd.read_csv(os.getcwd() + "/heatmap/aircraftdata.csv")
 df_filtered_heatmap = df_heatmap[df]
 # quakes = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/earthquakes-23k.csv')
 

@@ -29,3 +29,4 @@ super-linter.log
 
 /.idea
 /venv
+/data/db
