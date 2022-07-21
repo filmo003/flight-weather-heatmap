@@ -1,15 +1,15 @@
 version: "3.9"
    
 services:
-  db:
-    container_name: heatmap-db
-    image: postgres
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+#  db:
+#    container_name: heatmap-db
+#    image: postgres
+#    volumes:
+#      - ./data/db:/var/lib/postgresql/data
+#    environment:
+#      - POSTGRES_DB=postgres
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
   web:
     container_name: heatmap-ui
     build: .
