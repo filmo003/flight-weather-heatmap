@@ -14,5 +14,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker-compose up
+    - uses: isbang/compose-action@v1.1.0
+    - name: Docker Compose Up
+      with:
+        compose-file: "./docker-compose.yml"
