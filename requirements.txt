@@ -10,3 +10,4 @@ dash==1.21
 django-plotly-dash==1.6.5
 Werkzeug==2.0.3
 openpyxl==3.0.10
+django-bootstrap-v5
