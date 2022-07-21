@@ -4,14 +4,12 @@ from django_plotly_dash import DjangoDash
 import pandas as pd
 import plotly.graph_objects as go
 
-months = ["January", "February", "March", "April", "May", "June",
-          "July", "August", "September", "October", "November", "December"]
-
-
-
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 import plotly.express as px
+
+months = ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"]
 
 # Iris bar figure
 def drawFigure(df):
@@ -51,6 +49,7 @@ df1 = px.data.iris()
 df_heatmap = pd.read_csv(os.getcwd() + "/heatmap/monthly_f35_weather_canx.csv")
 df_aircraft = pd.read_csv(os.getcwd() + "/heatmap/aircraftdata.csv")
 df_filtered_heatmap = df_heatmap.loc[df_heatmap['month'] == 1]
+df_base = df_heatmap.loc[df_heatmap['base_text'] == "BEALE"]
 # quakes = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/earthquakes-23k.csv')
 
 # Heatmap
@@ -134,6 +133,27 @@ def drawAircraftDropdown(df):
         ),
     ])
 
+
+def drawBaseHistogram(df, base):
+    df_base = df.loc[df['base_text']==base]
+    return html.Div([
+        dbc.Card(
+            dbc.CardBody([
+                dcc.Graph(
+                    figure=px.bar(df_base, x='month', y='Canx')
+                    .update_layout(
+                        template='plotly_dark',
+                        plot_bgcolor='rgba(0, 0, 0, 0)',
+                        paper_bgcolor='rgba(0, 0, 0, 0)',
+                    ),
+                    config={
+                        'displayModeBar': False
+                    }
+                )
+            ])
+        ),
+    ])
+
 # Initialize Figure
 fig = go.Figure()
 
@@ -154,10 +174,13 @@ app.layout = html.Div([
             html.Br(),
             dbc.Row([
                 dbc.Col([
-                    drawHeatmap(df_heatmap),
+                    drawHeatmap(df_heatmap)
                 ], width=8),
                 dbc.Col([
-                    drawAircraftDropdown(df_aircraft)
+                    drawAircraftDropdown(df_aircraft),
+                    html.Br(),
+                    drawBaseHistogram(df_heatmap, "BEALE AFB"),
+
                 ], width=4),
             ], align='center'),
             html.Br(),
@@ -183,7 +206,7 @@ app.layout = html.Div([
     Input('aircraft-dropdown', 'value'),
 )
 def callback_color(month, aircraft):
-    df_filtered_heatmap = df_heatmap.loc[df_heatmap['month'] == month]
+    df_filtered_heatmap = df_heatmap.loc[df_heatmap['month'] == month+1]
     df = df_heatmap
     fig = go.Figure(
         go.Densitymapbox(lat=df_filtered_heatmap['latitude'], lon=df_filtered_heatmap['longitude'],
