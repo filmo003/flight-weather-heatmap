@@ -50,7 +50,7 @@ def drawText(text):
 df1 = px.data.iris()
 df_heatmap = pd.read_csv(os.getcwd() + "/heatmap/monthly_f35_weather_canx.csv")
 df_aircraft = pd.read_csv(os.getcwd() + "/heatmap/aircraftdata.csv")
-df_filtered_heatmap = df_heatmap[df]
+df_filtered_heatmap = df_heatmap.loc[df_heatmap['month'] == 1]
 # quakes = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/earthquakes-23k.csv')
 
 # Heatmap
@@ -60,7 +60,7 @@ def drawHeatmap(df):
             dbc.CardBody([
                 dcc.Graph(id='heatmap',
                     figure=go.Figure(
-                        go.Densitymapbox(lat=df['latitude'], lon=df['longitude'], z=df['cancelPercent'], radius=20, text=df['base']))
+                        go.Densitymapbox(lat=df['latitude'], lon=df['longitude'], z=df['Canx'], radius=20, text=df['base_text']))
                     .update_layout(
                         mapbox_style="stamen-terrain", mapbox_center_lon=180, margin={"r": 0, "t": 0, "l": 0, "b": 0}
                     ),
@@ -183,10 +183,12 @@ app.layout = html.Div([
     Input('aircraft-dropdown', 'value'),
 )
 def callback_color(month, aircraft):
+    df_filtered_heatmap = df_heatmap.loc[df_heatmap['month'] == month]
     df = df_heatmap
     fig = go.Figure(
-        go.Densitymapbox(lat=df['latitude'], lon=df['longitude'], z=df['cancelPercent'], radius=20, text=df['base']))
-    fig.update_layout(mapbox_style="stamen-terrain", mapbox_center_lon=180)
+        go.Densitymapbox(lat=df_filtered_heatmap['latitude'], lon=df_filtered_heatmap['longitude'],
+                         z=df_filtered_heatmap['Canx'], radius=20, text=df_filtered_heatmap['base_text']))
+    fig.update_layout(mapbox_style="stamen-terrain", mapbox_center_lon=-96)
     fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
     try:
         max_crosswind = "Max Crosswind: " + str(df_aircraft.loc[df_aircraft['aircraft'] == aircraft]['crosswind'].array[0])
