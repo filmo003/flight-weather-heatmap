@@ -1,16 +1,17 @@
 import pandas
 from backendAPI import API
 
-csv = "./data/monthly_f35_weather_canx.csv"
+csv = "./data/output.csv"
+#csv = "./data/monthly_f35_weather_canx.csv"
 #csv = "./data/monthly_global_hawk_weather_canx.csv"
 
 def main():
-    api = API(csv, useMemory = False, deleteExisting = False)
+    api = API(csv, useMemory = False, deleteExisting = True)
     connection = api.createDatabase()
 
     #This is how you cet Canx data for a specific base. Returns {Name, Month, Canx}
-    canx = api.getCanx("EGLIN AFB")
-    for canx in canx: print(canx)
+    #canx = api.getCanx("name", "global-Hawk")
+    #for canx in canx: print(canx)
 
     #This is how you can query all base info. Returns {Name, Latitude, Longitude}
     # bases = api.getBases()
