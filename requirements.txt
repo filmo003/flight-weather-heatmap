@@ -1,0 +1,17 @@
+django
+psycopg2
+requests
+bs4
+dpd_static_support
+bootstrap4
+numpy
+pandas
+dash
+django-plotly-dash
+Werkzeug
+openpyxl
+django-bootstrap-v5
+dash_core_components
+dash_html_components
+dash_bootstrap_components
+scipy

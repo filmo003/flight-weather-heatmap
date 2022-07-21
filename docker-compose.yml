@@ -1,69 +1,26 @@
-version: '3'
-volumes:
-  pgdatasource:
-  
+version: "3.9"
+   
 services:
-  arcsquad-db:
-    image: postgres
-    container_name: arcsquad-db
-    restart: always
-    environment: 
-     - DATABASE_HOST=127.0.0.1
-     - POSTGRES_USER=postgres
-     - POSTGRES_PASSWORD=docker
-     - POSTGRES_PORT=5432
-     - POSTGRES_DB=zprefix
-    ports:
-     - '5432:5432'
-    networks:
-      - app-network
-    healthcheck:
-        test: ["CMD-SHELL", "pg_isready -U postgres"]
-        interval: 5s
-        timeout: 5s
-        retries: 5
+#  db:
+#    container_name: heatmap-db
+#    image: postgres
+#    volumes:
+#      - ./data/db:/var/lib/postgresql/data
+#    environment:
+#      - POSTGRES_DB=postgres
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
+  web:
+    container_name: heatmap-ui
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - pgdatasource:/var/lib/postgresql/data
-
-  arcsquad-api:
-    build: ./api
-    container_name: arcsquad-api
-    depends_on:
-      arcsquad-db:
-        condition: service_healthy
+      - .:/flight-weather-heatmap
     ports:
-      - '8082:8082'
-    networks:
-      - app-network
-    environment: 
-      - NODE_ENV=development
-      - DATABASE_HOST=arcsquad-db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=docker
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=arcsquad
-    volumes:
-      - type: bind
-        source: ./api
-        target: /app
-    command: npm run start:dev
-
-  arcsquad-ui:
-    build: ./ui
-    container_name: arcsquad-ui
+      - "8000:8000"
     environment:
-      - FAST_REFRESH=false
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     depends_on:
-      - 'arcsquad-api'
-    ports:
-      - '3001:3000'
-    networks:
-      - app-network
-    volumes:
-      - type: bind
-        source: ./ui
-        target: /app
-
-networks:
-  app-network:
-    driver: bridge
+      - db
