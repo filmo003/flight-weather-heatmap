@@ -208,3 +208,4 @@ cython_debug/
 /example_data
 example_data/KRDR_cleaned.csv
 wasp/db.sqlite3
+*.db
