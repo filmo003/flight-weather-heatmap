@@ -1,9 +1,11 @@
 import os
 import csv
 import sqlite3
+from aircrafts import Aircrafts
 
 class API:
     def __init__(self, csvFile, useMemory = False, deleteExisting = False):
+        self.__aircraftDataManager = Aircrafts()
         self.__tableName = "weatherData"
         self.__databaseFileName = self.__tableName + ".db"
         #self.__csvFile = "./example_data/KRDR_cleaned.csv"
@@ -88,7 +90,12 @@ class API:
         self.__cursor.execute(self.__getBasesQuery)
         return self.__cursor.fetchall()
 
-    def getCanx(self, baseName):
+    def getDEVCanx(self, baseName):
         self.__getCanxQuery = "SELECT DISTINCT base_text, Month, canx FROM " + self.__tableName +" WHERE base_text = " + "'" + baseName + "'"
         self.__cursor.execute(self.__getCanxQuery)
         return self.__cursor.fetchall()
+
+    def getCanx(self, baseName, aircraft):
+        self.__aircraftData = self.__aircraftDataManager.getData(aircraft)
+        
+
