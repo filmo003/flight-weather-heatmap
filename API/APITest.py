@@ -1,12 +1,11 @@
 import pandas
 from backendAPI import API
 
-csv = "./example_data/output.csv"
-#csv = "./example_data/newestData.csv"
-#csv = "./example_data/KRDR_cleaned.csv"
+csv = "./data/monthly_f35_weather_canx.csv"
+#csv = "./data/monthly_global_hawk_weather_canx.csv"
 
 def main():
-    api = API(csv, useMemory = False, deleteExisting = False)
+    api = API(csv, useMemory = True, deleteExisting = True)
     connection = api.createDatabase()
     bases = api.getBases()
     for base in bases: print(base)
