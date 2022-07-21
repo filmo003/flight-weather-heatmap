@@ -18,3 +18,4 @@ jobs:
     - name: Docker Compose Up
       with:
         compose-file: "./docker-compose.yml"
+        up-flags: "-d"
