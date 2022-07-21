@@ -5,7 +5,7 @@ from . import plotly_app
 
 
 def index(request):
-    weather_list = Weather.objects.order_by('-platform_id')[:5]
+    weather_list = Weather.objects.order_by('-station_id')[:5]
     context = {
         'weather_list': weather_list,
     }
