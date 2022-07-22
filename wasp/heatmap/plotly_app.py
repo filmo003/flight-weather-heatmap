@@ -98,7 +98,7 @@ def drawHeatmap(df_filtered_heatmap):
             dbc.CardBody([
                 dcc.Graph(id='heatmap',
                           figure=px.scatter_mapbox(df_filtered_heatmap, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["month", "Canx"],
-                        color="Canx", zoom=3, height=650, color_continuous_scale='Bluered', size="Marker Size")
+                        color="Canx", zoom=3, height=650, color_continuous_scale='Bluered', size="Marker Size", color_continuous_midpoint=0.15)
                             .update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False)
                           .update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
                 ),
@@ -122,7 +122,7 @@ def drawBasemap(df):
             dbc.CardBody([
                 dcc.Graph(id='basemap',
                           figure=px.scatter_mapbox(df, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["month", "Canx"],
-                        color="Canx", zoom=12, height=300, color_continuous_scale='Bluered', size="Marker Size")
+                        color_discrete_sequence=["white"], zoom=12, height=300)
                             .update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False,)
                           .update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
                 ),
@@ -142,11 +142,11 @@ def drawAircraftDropdown(df):
                     placeholder="Select an aircraft",
                     id='aircraft-dropdown',
                 ),
-                html.Div(id='aircraft-dropdown-output-container', style={"width": "50%"}, ),
+                # html.Div(id='aircraft-dropdown-output-container', style={"width": "50%"}, ),
                 html.Div(id='crosswind', style={"width": "50%"}, ),
                 html.Div(id='altitude', style={"width": "50%"}, ),
                 html.Div(id='ceiling', style={"width": "50%"}, ),
-                html.Div(id='rcr', style={"width": "50%"}, ),
+                html.Div(id='rcr', style={"width": "100%"}, ),
                 html.Div(id='takeoff-time', style={"width": "50%"}, ),
                 html.Div(id='landing-time', style={"width": "50%"}, ),
             ])
@@ -180,12 +180,13 @@ def drawBaseDropdown(bases):
     return html.Div([
         dbc.Card(
             dbc.CardBody([
+                html.Div(["Base: "]),
                 dcc.Dropdown(
                     bases['base_text'],
                     placeholder="Select a base",
                     id='base-dropdown',
                 ),
-                html.Div(id='base-dropdown-output-container', style={"width": "50%"}, ),
+
             ])
         ),
     ])
@@ -198,12 +199,25 @@ def drawBaseHistogram(base="BEALE AFB"):
     return html.Div([
         dbc.Card(
             dbc.CardBody([
+                html.Div([
+                    html.H2("Cancel Probability"),
+                ], style={'textAlign': 'center'}),
                 dcc.Graph(id='barchart',
-                    figure=px.bar(x=canx['month'], y=sorties_to_schedule, height=250)
+                    figure=px.bar(x=canx['month'], y=sorties_to_schedule, height=250,
+                                  labels={
+                                      "Month",
+                                      "Cancellation Probability",
+
+                                  },
+                                  title="Monthly Cancellations")
+
                     .update_layout(
                         template='plotly_dark',
                         plot_bgcolor='rgba(0, 0, 0, 0)',
                         paper_bgcolor='rgba(0, 0, 0, 0)',
+                        margin=dict(l=0, r=0, t=0, b=0),
+
+
                     ),
                     config={
                         'displayModeBar': False
@@ -215,8 +229,6 @@ def drawBaseHistogram(base="BEALE AFB"):
 
 def drawCalendar(combined_df):
     combined = combined_df.loc[(combined_df['base_text']==selected_base)&(combined_df['aircraft']==selected_aircraft)]
-    dummy_start_date = "2021-01-01"
-    dummy_end_date = "2021-12-31"
     # date range from start date to end date and random
     # column named value using amount of days as shape
     combined['Datetime'] = '2022' + '-' + combined['month'].astype(str) + '-' + combined['day'].astype(str)
@@ -229,7 +241,7 @@ def drawCalendar(combined_df):
                     figure=calplot(
                          combined,
                          x="Datetime",
-                         y="Canx", dark_theme=True
+                         y="Canx", dark_theme=True, colorscale="reds", total_height=300
                     )
                 )
             ])
@@ -270,7 +282,7 @@ app.layout = html.Div([
                             drawAircraftDropdown(df_aircraft),
                             drawNumSortiesField()
                         ], width=6),
-                        dbc.Col([drawBaseHistogram(selected_base)], width=6),
+                        dbc.Col([drawBaseHistogram(selected_base)]),
                     ]),
 
 
@@ -278,7 +290,8 @@ app.layout = html.Div([
             ], align='center'),
             html.Br(),
             dbc.Row([
-                drawCalendar(df_heatmap_daily)
+                dbc.Col([drawCalendar(df_heatmap_daily)])
+
             ], align='center'),
         ]), color = 'dark'
     )
@@ -289,8 +302,8 @@ app.layout = html.Div([
     Output('basemap', 'figure'),
     Output('calendar', 'figure'),
     Output('slider-output-container', 'children'),
-    Output('aircraft-dropdown-output-container', 'children'),
-    Output('base-dropdown-output-container', 'children'),
+    # Output('aircraft-dropdown-output-container', 'children'),
+    # Output('base-dropdown-output-container', 'children'),
     Output('crosswind', 'children'),
     Output('altitude', 'children'),
     Output('ceiling', 'children'),
@@ -323,7 +336,7 @@ def callback_color(month, aircraft="global-Hawk", num_sorties=100, base="BEALE A
     df_filtered_heatmap = df_filtered_heatmap.loc[df_filtered_heatmap['month'] == month+1]
 
     fig = px.scatter_mapbox(df_filtered_heatmap, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["month", "Canx"],
-                        color="Canx", zoom=3, height=650, color_continuous_scale='Bluered', size="Marker Size")
+                        color="Canx", zoom=3, height=650, color_continuous_scale='Bluered', size="Marker Size", color_continuous_midpoint=0.15)
 
     fig.update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False)
 
@@ -339,16 +352,31 @@ def callback_color(month, aircraft="global-Hawk", num_sorties=100, base="BEALE A
     # sorties_to_schedule/=sorties_to_schedule.sum()
     # sorties_to_schedule*=num_sorties
 
-    fig2 = px.bar(x=df_hist['month'], y=sorties_to_schedule, )
+    # fig2 = px.bar(x=df_hist['month'], y=sorties_to_schedule, labels={
+    #                                   "Month",
+    #                                   "Cancellation Probability",
+    #
+    #                               },
+    #                               title="Monthly Cancellations")
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    fig2 = go.Figure()
+    fig2.add_trace(go.Bar(
+        x=months,
+        y=sorties_to_schedule,
+    ))
     fig2.update_layout(
         template='plotly_dark',
         plot_bgcolor='rgba(0, 0, 0, 0)',
         paper_bgcolor='rgba(0, 0, 0, 0)',
+        margin=dict(l=0, r=0, t=0, b=0),
     )
+
 
     fig3 = px.scatter_mapbox(df_filtered_heatmap.loc[df_filtered_heatmap['base_text']==selected_base], lat="latitude", lon="longitude", hover_name="base_text",
                                hover_data=["month", "Canx"],
-                               color="Canx", zoom=12, height=300, color_continuous_scale='Bluered', size="Marker Size")
+                               color_discrete_sequence=["white"], zoom=12, height=300)
     fig3.update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False, )
 
     fig3.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
@@ -361,7 +389,7 @@ def callback_color(month, aircraft="global-Hawk", num_sorties=100, base="BEALE A
     fig4 = calplot(
         combined,
         x="Datetime",
-        y="Canx", dark_theme=True
+        y="Canx", dark_theme=True, colorscale="reds", total_height=300
     )
 
     try:
@@ -389,4 +417,4 @@ def callback_color(month, aircraft="global-Hawk", num_sorties=100, base="BEALE A
         takeoff_time = "Takeoff Time: "
         landing_time = "Landing Time: "
 
-    return fig, fig2, fig3, fig4, months[month], aircraft, base, max_crosswind, altitude, ceiling, rcr, takeoff_time, landing_time
+    return fig, fig2, fig3, fig4, months[month], max_crosswind, altitude, ceiling, rcr, takeoff_time, landing_time
