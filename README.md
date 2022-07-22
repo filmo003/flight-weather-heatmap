@@ -6,10 +6,11 @@ An application to help correlate weather data with when you should plan sorties
 Sorties are often planned without much data/insight as to how weather has historically affected launches.
 We propose a simple open platform that will ingest historical weather data, and show data along with a 'heatmap' of ideal timeframes for when to launch sorties to prevent interference from weather.
 
-![alt text](https://github.com/filmo003/flight-weather-heatmap/blob/Dev/D9B57C95-F38A-46D2-A492-1819BC22BC23.jpeg?raw=true)
+![weathermap](heatmap.jpeg)
 
 ## Data Sources Used
-
+https://climate.af.mil and the 14th weather squadron
+https://noaa.org
 
 ## How to run
 DOCKER
