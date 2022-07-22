@@ -13,7 +13,7 @@ https://climate.af.mil and the 14th weather squadron
 https://noaa.org
 
 ## How to run
-### WARNING: You will need base_weather_data.csv and place it into /data/ in order for the Sqllite databse to populate. (Create database function from /API/ is called to create the database). This is required before you can run the project and is also why the CI in the actions is failing.
+### WARNING: You will need monthly_base_weather_data.csv and place it into /wasp/heatmap/ in order for the Sqllite databse to populate. (Create database function from /API/ is called to create the database). This is required before you can run the project and is also why the CI in the actions is failing.
 
 DOCKER
 From the root directory of the repository, run
