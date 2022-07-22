@@ -21,9 +21,9 @@ class API:
                 print("Existing database found. Successfully deleted")
 
         if(useMemory):
-            self.__connection = sqlite3.connect(":memory:")
+            self.__connection = sqlite3.connect(":memory:", check_same_thread=False)
         else:
-            self.__connection = sqlite3.connect(self.__databaseFileName)
+            self.__connection = sqlite3.connect(self.__databaseFileName, check_same_thread=False)
         self.__cursor = self.__connection.cursor()
     
 
@@ -94,7 +94,7 @@ class API:
         return self.__df
     
     def getAircraftData(self, aircraft):
-        return self.__aircraftDataManager.getData()
+        return self.__aircraftDataManager.getData(aircraft)
 
     def getCanx(self, baseName, aircraft, month = False):
         self.__aircraftData = self.__aircraftDataManager.getData(aircraft)

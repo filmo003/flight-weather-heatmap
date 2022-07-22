@@ -28,7 +28,7 @@ months = ["January", "February", "March", "April", "May", "June",
           "July", "August", "September", "October", "November", "December"]
 
 
-api = API(os.getcwd() + "/heatmap/monthly_f35_weather_canx.csv", useMemory = False, deleteExisting = False)
+api = API(os.getcwd() + "/heatmap/base_weather_data.csv", useMemory = False, deleteExisting = False)
 connection = api.createDatabase()
 
 #This is how you cet Canx data for a specific base. Returns {Name, Month, Canx}
@@ -82,11 +82,12 @@ df_filtered_heatmap = df_heatmap.loc[df_heatmap['month'] == 1]
 df_base = df_heatmap.loc[df_heatmap['base_text'] == "BEALE"]
 selected_base = "BEALE AFB"
 selected_aircraft = df_aircraft['aircraft'][0]
+num_sorties = 100
 
 #This is how you can query all base info. Returns {Name, Latitude, Longitude}
-# bases = api.getBases()
-bases = df_filtered_heatmap['base_text']
-for base in bases: print(base)
+bases = api.getBases()
+# bases = df_filtered_heatmap['base_text']
+# for base in bases: print(base)
 # Heatmap
 def drawHeatmap(df):
     return html.Div([
@@ -128,7 +129,7 @@ def drawBasemap(df):
 
 # Aircraft Dropdown
 def drawAircraftDropdown(df):
-    aircraft = ["Globalhawk", "C-130"]
+    aircraft = ["global-Hawk", "f-35"]
 
     return html.Div([
         dbc.Card(
@@ -146,6 +147,27 @@ def drawAircraftDropdown(df):
         ),
     ])
 
+def drawNumSortiesField():
+    aircraft = ["global-Hawk", "f-35"]
+
+    return html.Div([
+        dbc.Card(
+            dbc.CardBody([
+                dbc.Col([html.Div(["Number of Sorties: "])], width=6),
+                dbc.Col([
+                    dcc.Input(
+                        id="num-sorties",
+                        type="number",
+                        placeholder=100,
+                    )
+                ], width=6),
+
+
+
+            ])
+        ),
+    ])
+
 # Aircraft Dropdown
 def drawBaseDropdown(bases):
     # bases = np.array(bases)[:,0]
@@ -153,7 +175,7 @@ def drawBaseDropdown(bases):
         dbc.Card(
             dbc.CardBody([
                 dcc.Dropdown(
-                    bases,
+                    bases['base_text'],
                     placeholder="Select a base",
                     id='base-dropdown',
                 ),
@@ -162,15 +184,16 @@ def drawBaseDropdown(bases):
         ),
     ])
 
-def drawBaseHistogram(df, base="BEALE AFB"):
-    # canx = np.array(api.getCanx(base, selected_aircraft))
-    canx = np.array([[1,2,3,4,5,6,7,8,9,10,11,12],[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]]).T
-    df_base = df.loc[df['base_text']==base]
+def drawBaseHistogram(base="BEALE AFB"):
+    canx = api.getCanx(base, selected_aircraft)
+    sorties_to_schedule = (1 - canx['canx'])
+    sorties_to_schedule /= sorties_to_schedule.sum()
+    sorties_to_schedule *= num_sorties
     return html.Div([
         dbc.Card(
             dbc.CardBody([
                 dcc.Graph(id='barchart',
-                    figure=px.bar(x=canx[:,0], y=canx[:,1], height=250)
+                    figure=px.bar(x=canx['month'], y=sorties_to_schedule, height=250)
                     .update_layout(
                         template='plotly_dark',
                         plot_bgcolor='rgba(0, 0, 0, 0)',
@@ -195,7 +218,7 @@ app.layout = html.Div([
         dbc.CardBody([
             dbc.Row([
                 dbc.Col([
-                    drawText("Weather Awareness Sortyyy Planner")
+                    drawText("Weather Awareness Sortie Planner")
                 ], width=6),
                 dbc.Col([
                     drawText("(WASP)")
@@ -212,8 +235,11 @@ app.layout = html.Div([
                     drawBasemap(df_filtered_heatmap.loc[df_filtered_heatmap['base_text']==selected_base]),
 
                     dbc.Row([
-                        dbc.Col([drawAircraftDropdown(df_aircraft)], width=6),
-                        dbc.Col([drawBaseHistogram(df_heatmap, selected_base)], width=6),
+                        dbc.Col([
+                            drawAircraftDropdown(df_aircraft),
+                            drawNumSortiesField()
+                        ], width=6),
+                        dbc.Col([drawBaseHistogram(selected_base)], width=6),
                     ]),
 
 
@@ -234,6 +260,7 @@ app.layout = html.Div([
 @app.callback(
     Output('heatmap', 'figure'),
     Output('barchart', 'figure'),
+    Output('basemap', 'figure'),
     Output('slider-output-container', 'children'),
     Output('aircraft-dropdown-output-container', 'children'),
     Output('base-dropdown-output-container', 'children'),
@@ -242,11 +269,25 @@ app.layout = html.Div([
     Output('min-temp', 'children'),
     Input('month-slider', 'value'),
     Input('aircraft-dropdown', 'value'),
+    Input('num-sorties', 'value'),
     Input('base-dropdown', 'value'),
 )
-def callback_color(month, aircraft, base):
-    selected_base = base
-    selected_aircraft = aircraft
+def callback_color(month, aircraft="global-Hawk", num_sorties=100, base="BEALE AFB"):
+    if base != None:
+        selected_base = base
+    else:
+        selected_base = "BEALE AFB"
+
+    if aircraft != None:
+        selected_aircraft = aircraft
+    else:
+        selected_aircraft = 'global-Hawk'
+
+    if num_sorties != None:
+        num_sorties = num_sorties
+    else:
+        num_sorties = 100
+
     df_filtered_heatmap = df_heatmap.loc[df_heatmap['month'] == month+1]
 
     fig = px.scatter_mapbox(df_filtered_heatmap, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["month", "Canx"],
@@ -255,21 +296,39 @@ def callback_color(month, aircraft, base):
     fig.update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False)
 
     fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
-    # canx = np.array(api.getCanx(base))
-    canx = np.array([[1,2,3,4,5,6,7,8,9,10,11,12],[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]]).T
-    fig2 = px.bar(x=canx[:, 0], y=canx[:, 1], )
+    canx = api.getCanx(selected_base, selected_aircraft)
+    # canx = np.array([[1,2,3,4,5,6,7,8,9,10,11,12],[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]]).T
+
+    sorties_to_schedule = (1 - canx['canx'])
+    sorties_to_schedule/=sorties_to_schedule.sum()
+    sorties_to_schedule*=num_sorties
+
+    fig2 = px.bar(x=canx['month'], y=sorties_to_schedule, )
     fig2.update_layout(
         template='plotly_dark',
         plot_bgcolor='rgba(0, 0, 0, 0)',
         paper_bgcolor='rgba(0, 0, 0, 0)',
     )
 
+    fig3 = px.scatter_mapbox(df_filtered_heatmap.loc[df_filtered_heatmap['base_text']==selected_base], lat="latitude", lon="longitude", hover_name="base_text",
+                               hover_data=["month", "Canx"],
+                               color="Canx", zoom=12, height=300, color_continuous_scale='Bluered', size="Marker Size")
+    fig3.update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False, )
+
+    fig3.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+
+
+
     try:
-        max_crosswind = "Max Crosswind: " + str(df_aircraft.loc[df_aircraft['aircraft'] == aircraft]['crosswind'].array[0])
-        max_temp = "Max Temperature: " + str(df_aircraft.loc[df_aircraft['aircraft'] == aircraft]['crosswind'].array[0])
-        min_temp = "Min Temperature: " + str(df_aircraft.loc[df_aircraft['aircraft'] == aircraft]['crosswind'].array[0])
+        current_aircraft = api.getAircraftData(selected_aircraft)
+        max_crosswind = current_aircraft['crosswind']
+        max_temp = current_aircraft['highTemp']
+        min_temp = current_aircraft['lowTemp']
+        max_crosswind = "Max Crosswind: " + str(max_crosswind)#str(df_aircraft.loc[df_aircraft['aircraft'] == aircraft]['crosswind'].array[0])
+        max_temp = "Max Temperature: " + str(max_temp)#str(df_aircraft.loc[df_aircraft['aircraft'] == aircraft]['crosswind'].array[0])
+        min_temp = "Min Temperature: " + str(min_temp)#str(df_aircraft.loc[df_aircraft['aircraft'] == aircraft]['crosswind'].array[0])
     except:
         max_crosswind = "Max Crosswind: "
         max_temp = "Max Temperature: "
         min_temp = "Min Temperature: "
-    return fig, fig2, months[month], aircraft, base, max_crosswind, max_temp, min_temp
+    return fig, fig2, fig3, months[month], aircraft, base, max_crosswind, max_temp, min_temp
