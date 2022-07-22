@@ -97,7 +97,7 @@ def drawHeatmap(df_filtered_heatmap):
         dbc.Card(
             dbc.CardBody([
                 dcc.Graph(id='heatmap',
-                          figure=px.scatter_mapbox(df_filtered_heatmap, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["month", "Canx"],
+                          figure=px.scatter_mapbox(df_filtered_heatmap, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["Canx"],
                         color="Canx", zoom=3, height=650, color_continuous_scale='Bluered', size="Marker Size", color_continuous_midpoint=0.15)
                             .update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False)
                           .update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
@@ -114,7 +114,7 @@ def drawHeatmap(df_filtered_heatmap):
 
             ])
         ),
-    ])
+    ], style={"height":"70%"})
 
 def drawBasemap(df):
     return html.Div([
@@ -271,7 +271,7 @@ app.layout = html.Div([
             dbc.Row([
                 dbc.Col([
                     drawHeatmap(df_filtered_heatmap)
-                ], width=7),
+                ], width=7, style={"height":"70%"}),
                 dbc.Col([
 
                     drawBaseDropdown(bases),
@@ -281,12 +281,12 @@ app.layout = html.Div([
                         dbc.Col([
                             drawAircraftDropdown(df_aircraft),
                             drawNumSortiesField()
-                        ], width=6),
+                        ]),
                         dbc.Col([drawBaseHistogram(selected_base)]),
-                    ]),
+                    ], no_gutters=True),
 
 
-                ], width=5),
+                ], width=5, style={"height":"70%"}),
             ], align='center'),
             html.Br(),
             dbc.Row([
@@ -335,7 +335,7 @@ def callback_color(month, aircraft="global-Hawk", num_sorties=100, base="BEALE A
     df_filtered_heatmap = df_heatmap.loc[df_heatmap['aircraft'] == selected_aircraft]
     df_filtered_heatmap = df_filtered_heatmap.loc[df_filtered_heatmap['month'] == month+1]
 
-    fig = px.scatter_mapbox(df_filtered_heatmap, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["month", "Canx"],
+    fig = px.scatter_mapbox(df_filtered_heatmap, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["Canx"],
                         color="Canx", zoom=3, height=650, color_continuous_scale='Bluered', size="Marker Size", color_continuous_midpoint=0.15)
 
     fig.update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False)
