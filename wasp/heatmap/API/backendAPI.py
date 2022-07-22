@@ -2,7 +2,7 @@ import os
 import csv
 import sqlite3
 import pandas as pd
-from aircrafts import Aircrafts
+from .aircrafts import Aircrafts
 
 class API:
     def __init__(self, csvFile, useMemory = False, deleteExisting = False):
@@ -21,9 +21,9 @@ class API:
                 print("Existing database found. Successfully deleted")
 
         if(useMemory):
-            self.__connection = sqlite3.connect(":memory:")
+            self.__connection = sqlite3.connect(":memory:", check_same_thread=False)
         else:
-            self.__connection = sqlite3.connect(self.__databaseFileName)
+            self.__connection = sqlite3.connect(self.__databaseFileName, check_same_thread=False)
         self.__cursor = self.__connection.cursor()
     
 
