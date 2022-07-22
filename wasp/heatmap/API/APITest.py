@@ -1,4 +1,3 @@
-import pandas
 from backendAPI import API
 
 #csv = "./data/example_data/example_data.csv"
@@ -17,6 +16,9 @@ def main():
     #This is how you can query all base info. Returns {Name, Latitude, Longitude}
     #bases = api.getBases()
     #print(bases)
+
+    #aircraft = api.getAircraftData("global-Hawk")
+    #print(aircraft)
 
     #This is how you can create your own custom query. Returns all results
     # custom = api.executeQuery("SELECT * FROM weatherData")
