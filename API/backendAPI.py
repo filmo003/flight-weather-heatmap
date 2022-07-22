@@ -77,6 +77,10 @@ class API:
 
                 self.__insertQuery = "INSERT INTO " + self.__tableName + " VALUES(%s);" % ','.join('?' * len(self.__columns))
                 self.__cursor.executemany(self.__insertQuery, self.__reader)
+
+                self.__indexQuery = "CREATE INDEX bases_index ON weatherData (base_text, year, month, day, hour, air_temp, visibility, cross_wind_speed, wind_gust_speed, peak_wind_speed, ceiling_full, thunderstorms, freezing_rain, fog_haze, hail, icing_percent_low, icing_percent_med, icing_percent_high)"
+                self.__cursor.execute(self.__indexQuery)
+
                 self.__connection.commit()
         else:
             print("Database already exists.")
@@ -94,13 +98,12 @@ class API:
         return self.__df
     
     def getAircraftData(self, aircraft):
-        return self.__aircraftDataManager.getData()
+        return self.__aircraftDataManager.getData(aircraft)
 
-    def getCanx(self, baseName, aircraft, month = False):
+    def getCanx(self, baseName, aircraft, month = False, daily = False):
         self.__aircraftData = self.__aircraftDataManager.getData(aircraft)
         self.__query = "SELECT DISTINCT base_text, year, month, day, hour, air_temp, visibility, cross_wind_speed, wind_gust_speed, peak_wind_speed, ceiling_full, thunderstorms, freezing_rain, fog_haze, hail, icing_percent_low, icing_percent_med, icing_percent_high FROM " + self.__tableName + " WHERE base_text = " + "'" + baseName + "'"
         self.__df = pd.read_sql(self.__query, self.__connection)
-        #self.__df = pd.DataFrame(self.__query2, columns = ["year", "month", "day", "hour", "air_temp", "visibility", "cross_wind_speed", "wind_gust_speed", "peak_wind_speed", "ceiling_full", "thunderstorms", "freezing_rain", "fog_haze", "hail", "icing_percent_low", "icing_percent_med", "icing_percent_high"])
         self.__df[self.__df.columns[1:]] = self.__df[self.__df.columns[1:]].astype("float")
         if(month):
             self.__df = self.__df[self.__df["month"] == month]
@@ -142,10 +145,14 @@ class API:
 
         self.__df = self.__df.groupby(["type", "year", "month", "day"]).min().reset_index()
         self.__df = self.__df.groupby(["year", "month", "day"]).max().reset_index()
-        self.__df = self.__df.groupby(["month"]).mean().reset_index()
-        
-        if(month):
-            return self.__df["canx"][0]
+        if(daily):
+            self.__df = self.__df.groupby(["month", "day"]).mean().reset_index()
+            return self.__df[["month", "day", "canx"]]
         else:
-            return self.__df[["month", "canx"]]
+            self.__df = self.__df.groupby(["month"]).mean().reset_index()
         
+            if(month):
+                return self.__df["canx"][0]
+            else:
+                return self.__df[["month", "canx"]]
+                
