@@ -12,6 +12,7 @@ import numpy as np
 import colour as color
 Color = color.Color
 from matplotlib.colors import LinearSegmentedColormap
+from plotly_calplot import calplot
 
 token = "pk.eyJ1IjoiYWx5c2FrMTAiLCJhIjoiY2w1dmhhZGhrMDlyNDNobnoxMnpoMG1ubiJ9.nJeJvSZfuDdTBjtFfqrwkg"
 red = Color("red")
@@ -75,7 +76,8 @@ def drawText(text):
 
 # Data
 df1 = px.data.iris()
-df_heatmap = pd.read_csv(os.getcwd() + "/heatmap/monthly_f35_weather_canx.csv")
+df_heatmap = pd.read_csv(os.getcwd() + "/heatmap/monthly_base_weather_data.csv")
+df_heatmap_daily = pd.read_csv(os.getcwd() + "/heatmap/daily_base_weather_data.csv")
 df_heatmap['Marker Size'] = pd.Series([3 for x in range(len(df_heatmap.index))])
 df_aircraft = pd.read_csv(os.getcwd() + "/heatmap/aircraftdata.csv")
 df_filtered_heatmap = df_heatmap.loc[df_heatmap['month'] == 1]
@@ -89,13 +91,14 @@ bases = api.getBases()
 # bases = df_filtered_heatmap['base_text']
 # for base in bases: print(base)
 # Heatmap
-def drawHeatmap(df):
+def drawHeatmap(df_filtered_heatmap):
+    df_filtered_heatmap = df_filtered_heatmap.loc[df_heatmap['aircraft'] == selected_aircraft]
     return html.Div([
         dbc.Card(
             dbc.CardBody([
                 dcc.Graph(id='heatmap',
-                          figure=px.scatter_mapbox(df_filtered_heatmap, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["month", "Canx"],
-                        color="Canx", zoom=3, height=650, color_continuous_scale='Bluered', size="Marker Size")
+                          figure=px.scatter_mapbox(df_filtered_heatmap, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["Canx"],
+                        color="Canx", zoom=3, height=650, color_continuous_scale='Bluered', size="Marker Size", color_continuous_midpoint=0.15)
                             .update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False)
                           .update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
                 ),
@@ -111,7 +114,7 @@ def drawHeatmap(df):
 
             ])
         ),
-    ])
+    ], style={"height":"70%"})
 
 def drawBasemap(df):
     return html.Div([
@@ -119,7 +122,7 @@ def drawBasemap(df):
             dbc.CardBody([
                 dcc.Graph(id='basemap',
                           figure=px.scatter_mapbox(df, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["month", "Canx"],
-                        color="Canx", zoom=12, height=300, color_continuous_scale='Bluered', size="Marker Size")
+                        color_discrete_sequence=["white"], zoom=12, height=300)
                             .update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False,)
                           .update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
                 ),
@@ -139,10 +142,13 @@ def drawAircraftDropdown(df):
                     placeholder="Select an aircraft",
                     id='aircraft-dropdown',
                 ),
-                html.Div(id='aircraft-dropdown-output-container', style={"width": "50%"}, ),
-                html.Div(id='max-crosswind', style={"width": "50%"}, ),
-                html.Div(id='max-temp', style={"width": "50%"}, ),
-                html.Div(id='min-temp', style={"width": "50%"}, ),
+                # html.Div(id='aircraft-dropdown-output-container', style={"width": "50%"}, ),
+                html.Div(id='crosswind', style={"width": "50%"}, ),
+                html.Div(id='altitude', style={"width": "50%"}, ),
+                html.Div(id='ceiling', style={"width": "50%"}, ),
+                html.Div(id='rcr', style={"width": "100%"}, ),
+                html.Div(id='takeoff-time', style={"width": "50%"}, ),
+                html.Div(id='landing-time', style={"width": "50%"}, ),
             ])
         ),
     ])
@@ -168,18 +174,19 @@ def drawNumSortiesField():
         ),
     ])
 
-# Aircraft Dropdown
+# Base Dropdown
 def drawBaseDropdown(bases):
     # bases = np.array(bases)[:,0]
     return html.Div([
         dbc.Card(
             dbc.CardBody([
+                html.Div(["Base: "]),
                 dcc.Dropdown(
                     bases['base_text'],
                     placeholder="Select a base",
                     id='base-dropdown',
                 ),
-                html.Div(id='base-dropdown-output-container', style={"width": "50%"}, ),
+
             ])
         ),
     ])
@@ -192,12 +199,25 @@ def drawBaseHistogram(base="BEALE AFB"):
     return html.Div([
         dbc.Card(
             dbc.CardBody([
+                html.Div([
+                    html.H2("Cancel Probability"),
+                ], style={'textAlign': 'center'}),
                 dcc.Graph(id='barchart',
-                    figure=px.bar(x=canx['month'], y=sorties_to_schedule, height=250)
+                    figure=px.bar(x=canx['month'], y=sorties_to_schedule, height=250,
+                                  labels={
+                                      "Month",
+                                      "Cancellation Probability",
+
+                                  },
+                                  title="Monthly Cancellations")
+
                     .update_layout(
                         template='plotly_dark',
                         plot_bgcolor='rgba(0, 0, 0, 0)',
                         paper_bgcolor='rgba(0, 0, 0, 0)',
+                        margin=dict(l=0, r=0, t=0, b=0),
+
+
                     ),
                     config={
                         'displayModeBar': False
@@ -206,6 +226,29 @@ def drawBaseHistogram(base="BEALE AFB"):
             ])
         ),
     ])
+
+def drawCalendar(combined_df):
+    combined = combined_df.loc[(combined_df['base_text']==selected_base)&(combined_df['aircraft']==selected_aircraft)]
+    # date range from start date to end date and random
+    # column named value using amount of days as shape
+    combined['Datetime'] = '2022' + '-' + combined['month'].astype(str) + '-' + combined['day'].astype(str)
+    combined['Datetime'] = pd.to_datetime(combined['Datetime'], errors='coerce')
+    combined = combined.dropna()
+    return html.Div([
+        dbc.Card(
+            dbc.CardBody([
+                dcc.Graph(id='calendar',
+                    figure=calplot(
+                         combined,
+                         x="Datetime",
+                         y="Canx", dark_theme=True, colorscale="reds", total_height=300
+                    )
+                )
+            ])
+        ),
+    ])
+
+
 
 # Initialize Figure
 fig = go.Figure()
@@ -227,8 +270,8 @@ app.layout = html.Div([
             html.Br(),
             dbc.Row([
                 dbc.Col([
-                    drawHeatmap(df_heatmap)
-                ], width=7),
+                    drawHeatmap(df_filtered_heatmap)
+                ], width=7, style={"height":"70%"}),
                 dbc.Col([
 
                     drawBaseDropdown(bases),
@@ -238,21 +281,17 @@ app.layout = html.Div([
                         dbc.Col([
                             drawAircraftDropdown(df_aircraft),
                             drawNumSortiesField()
-                        ], width=6),
-                        dbc.Col([drawBaseHistogram(selected_base)], width=6),
-                    ]),
+                        ]),
+                        dbc.Col([drawBaseHistogram(selected_base)]),
+                    ], no_gutters=True),
 
 
-                ], width=5),
+                ], width=5, style={"height":"70%"}),
             ], align='center'),
             html.Br(),
             dbc.Row([
-                dbc.Col([
-                    drawFigure(df1)
-                ], width=9),
-                dbc.Col([
-                    drawFigure(df1)
-                ], width=3),
+                dbc.Col([drawCalendar(df_heatmap_daily)])
+
             ], align='center'),
         ]), color = 'dark'
     )
@@ -261,12 +300,17 @@ app.layout = html.Div([
     Output('heatmap', 'figure'),
     Output('barchart', 'figure'),
     Output('basemap', 'figure'),
+    Output('calendar', 'figure'),
     Output('slider-output-container', 'children'),
-    Output('aircraft-dropdown-output-container', 'children'),
-    Output('base-dropdown-output-container', 'children'),
-    Output('max-crosswind', 'children'),
-    Output('max-temp', 'children'),
-    Output('min-temp', 'children'),
+    # Output('aircraft-dropdown-output-container', 'children'),
+    # Output('base-dropdown-output-container', 'children'),
+    Output('crosswind', 'children'),
+    Output('altitude', 'children'),
+    Output('ceiling', 'children'),
+    Output('rcr', 'children'),
+    Output('takeoff-time', 'children'),
+    Output('landing-time', 'children'),
+
     Input('month-slider', 'value'),
     Input('aircraft-dropdown', 'value'),
     Input('num-sorties', 'value'),
@@ -288,47 +332,89 @@ def callback_color(month, aircraft="global-Hawk", num_sorties=100, base="BEALE A
     else:
         num_sorties = 100
 
-    df_filtered_heatmap = df_heatmap.loc[df_heatmap['month'] == month+1]
+    df_filtered_heatmap = df_heatmap.loc[df_heatmap['aircraft'] == selected_aircraft]
+    df_filtered_heatmap = df_filtered_heatmap.loc[df_filtered_heatmap['month'] == month+1]
 
-    fig = px.scatter_mapbox(df_filtered_heatmap, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["month", "Canx"],
-                        color="Canx", zoom=3, height=650, color_continuous_scale='Bluered', size="Marker Size")
+    fig = px.scatter_mapbox(df_filtered_heatmap, lat="latitude", lon="longitude", hover_name="base_text", hover_data=["Canx"],
+                        color="Canx", zoom=3, height=650, color_continuous_scale='Bluered', size="Marker Size", color_continuous_midpoint=0.15)
 
     fig.update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False)
 
     fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
-    canx = api.getCanx(selected_base, selected_aircraft)
-    # canx = np.array([[1,2,3,4,5,6,7,8,9,10,11,12],[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]]).T
+    # canx = api.getCanx(selected_base, selected_aircraft)
 
-    sorties_to_schedule = (1 - canx['canx'])
-    sorties_to_schedule/=sorties_to_schedule.sum()
-    sorties_to_schedule*=num_sorties
+    # canx_array = np.array([[1,2,3,4,5,6,7,8,9,10,11,12],[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]]).T
+    # canx = pd.DataFrame(canx_array, columns=['month', 'canx'])
 
-    fig2 = px.bar(x=canx['month'], y=sorties_to_schedule, )
+    df_hist = df_heatmap.loc[(df_heatmap['base_text']==selected_base)&(df_heatmap['aircraft']==selected_aircraft)]
+
+    sorties_to_schedule = df_hist['Canx']
+    # sorties_to_schedule/=sorties_to_schedule.sum()
+    # sorties_to_schedule*=num_sorties
+
+    # fig2 = px.bar(x=df_hist['month'], y=sorties_to_schedule, labels={
+    #                                   "Month",
+    #                                   "Cancellation Probability",
+    #
+    #                               },
+    #                               title="Monthly Cancellations")
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    fig2 = go.Figure()
+    fig2.add_trace(go.Bar(
+        x=months,
+        y=sorties_to_schedule,
+    ))
     fig2.update_layout(
         template='plotly_dark',
         plot_bgcolor='rgba(0, 0, 0, 0)',
         paper_bgcolor='rgba(0, 0, 0, 0)',
+        margin=dict(l=0, r=0, t=0, b=0),
     )
+
 
     fig3 = px.scatter_mapbox(df_filtered_heatmap.loc[df_filtered_heatmap['base_text']==selected_base], lat="latitude", lon="longitude", hover_name="base_text",
                                hover_data=["month", "Canx"],
-                               color="Canx", zoom=12, height=300, color_continuous_scale='Bluered', size="Marker Size")
+                               color_discrete_sequence=["white"], zoom=12, height=300)
     fig3.update_layout(mapbox_style="dark", mapbox_accesstoken=token, coloraxis_showscale=False, )
 
     fig3.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
 
-
+    combined_df = df_heatmap_daily
+    combined = combined_df.loc[(combined_df['base_text']==selected_base)&(combined_df['aircraft']==selected_aircraft)]
+    combined['Datetime'] = '2022' + '-' + combined['month'].astype(str) + '-' + combined['day'].astype(str)
+    combined['Datetime'] = pd.to_datetime(combined['Datetime'], errors='coerce')
+    combined = combined.dropna()
+    fig4 = calplot(
+        combined,
+        x="Datetime",
+        y="Canx", dark_theme=True, colorscale="reds", total_height=300
+    )
 
     try:
         current_aircraft = api.getAircraftData(selected_aircraft)
         max_crosswind = current_aircraft['crosswind']
-        max_temp = current_aircraft['highTemp']
-        min_temp = current_aircraft['lowTemp']
-        max_crosswind = "Max Crosswind: " + str(max_crosswind)#str(df_aircraft.loc[df_aircraft['aircraft'] == aircraft]['crosswind'].array[0])
-        max_temp = "Max Temperature: " + str(max_temp)#str(df_aircraft.loc[df_aircraft['aircraft'] == aircraft]['crosswind'].array[0])
-        min_temp = "Min Temperature: " + str(min_temp)#str(df_aircraft.loc[df_aircraft['aircraft'] == aircraft]['crosswind'].array[0])
+        altitude = current_aircraft['altitude']
+        ceiling = current_aircraft['ceiling']
+        rcr = current_aircraft['RCR']
+        takeoff_time = current_aircraft['takeoffTime']
+        landing_time = current_aircraft['landingTime']
+
+
+        max_crosswind = "Crosswind: " + str(max_crosswind)
+        altitude = "Altitude: " + str(altitude)
+        ceiling = "Celing: " + str(ceiling)
+        rcr = "Runway Condition: " + str(rcr)
+        takeoff_time = "Takeoff Time: " + str(takeoff_time)
+        landing_time = "Landing Time: " + str(landing_time)
+
     except:
         max_crosswind = "Max Crosswind: "
-        max_temp = "Max Temperature: "
-        min_temp = "Min Temperature: "
-    return fig, fig2, fig3, months[month], aircraft, base, max_crosswind, max_temp, min_temp
+        altitude = "Altitude: "
+        ceiling = "Celing: "
+        rcr = "Runway Condition: "
+        takeoff_time = "Takeoff Time: "
+        landing_time = "Landing Time: "
+
+    return fig, fig2, fig3, fig4, months[month], max_crosswind, altitude, ceiling, rcr, takeoff_time, landing_time
