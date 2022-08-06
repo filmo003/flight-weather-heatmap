@@ -14,7 +14,7 @@ Color = color.Color
 from matplotlib.colors import LinearSegmentedColormap
 from plotly_calplot import calplot
 
-token = "pk.eyJ1IjoiYWx5c2FrMTAiLCJhIjoiY2w1dmhhZGhrMDlyNDNobnoxMnpoMG1ubiJ9.nJeJvSZfuDdTBjtFfqrwkg"
+token = ""
 red = Color("red")
 colorscale = list(red.range_to(Color("green"),10))
 base_colors = []
