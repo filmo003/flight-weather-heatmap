@@ -6,3 +6,4 @@ WORKDIR /flight-weather-heatmap/wasp
 COPY requirements.txt /flight-weather-heatmap/wasp
 RUN pip install -r requirements.txt
 COPY . /flight-weather-heatmap/
+RUN python manage.py migrate

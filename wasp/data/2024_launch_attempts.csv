@@ -1,0 +1,89 @@
+location,platform,time,date,status,notes
+Cape Canaveral,falcon 9 galileo l13,22:40 utc,9/17/2024,,
+Cape Canaveral,falcon 9 bluebird-1,08:52 utc,9/12/2024,success,
+Cape Canaveral,falcon 9 polaris dawn,09:23 utc,9/10/2024,success,
+Cape Canaveral,falcon 9 starlink 8-11,15:33 utc,9/5/2024,success,
+Cape Canaveral,falcon 9 starlink 8-11,12:59 utc,9/4/2024,delay,weather
+Cape Canaveral,falcon 9 starlink 8-10,05:39 utc,8/31/2024,success,
+Cape Canaveral,falcon 9 starlink 8-6,05:50 utc,8/28/2024,success,
+Cape Canaveral,falcon 9 polaris dawn,07:33 utc,8/27/2024,delay,weather
+Cape Canaveral,falcon 9 starlink 10-5,13:20 utc,8/20/2024,success,
+Cape Canaveral,falcon 9 digital globe 2,13:00 utc,8/15/2024,success,
+Cape Canaveral,falcon 9 starlink 10-7,10:37 utc,8/12/2024,success,
+Cape Canaveral,falcon 9 starlink 10-7,11:21 utc,8/11/2024,delay,scheduling
+Cape Canaveral,falcon 9 starlink 10-7,11:21 utc,8/10/2024,delay,technical
+Cape Canaveral,starlink 8-3,12:50 utc,8/10/2024,success,
+Cape Canaveral,falcon 9 starlink 8-3,12:13 utc,8/9/2024,delay,weather
+Cape Canaveral,falcon 9 cygnus ng-21,15:02 utc,8/3/2024,success,
+Cape Canaveral,falcon 9 starlink 10-6,05:01 utc,8/2/2024,success,
+Cape Canaveral,atlas v ussf-51,10:45 utc,7/30/2024,success,
+Cape Canaveral,falcon 9 starlink 10-4,05:09 utc,7/28/2024,success,
+Cape Canaveral,falcon 9 starlink 10-9,05:45 utc,7/27/2024,success,
+Cape Canaveral,falcon 9 turksat-6a,23:30 utc,7/8/2024,success,
+Cape Canaveral,falcon 9 starlink 8-9,08:55 utc,7/3/2024,success,
+Cape Canaveral,falcon 9 starlink 10-3,11:00 utc,6/27/2024,success,
+Cape Canaveral,falcon heavy goes-u,21:26 utc,6/25/2024,success,
+Cape Canaveral,falcon 9 ses-24,21:35 utc,6/20/2024,success,
+Cape Canaveral,falcon 9 ses-24,21:35 utc,6/19/2024,delay,weather
+Cape Canaveral,falcon 9 ses-24,21:35 utc,6/18/2024,delay,weather
+Cape Canaveral,falcon 9 starlink 10-2,17:15 utc,6/23/2024,success,
+Cape Canaveral,falcon 9 starlink 10-2,21:08 utc,6/12/2024,delay,technical
+Cape Canaveral,falcon 9 starlink 10-1,01:56 utc,6/8/2024,success,
+Cape Canaveral,atlas v cft,14:42 utc,6/5/2024,success,
+Cape Canaveral,falcon 9 starlink 8-5,02:16 utc,6/5/2024,success,
+Cape Canaveral,atlas v cft,16:18 utc,6/1/2024,delay,technical
+Cape Canaveral,falcon 9 starlink 6-64,02:37 utc,6/1/2024,success,
+Cape Canaveral,falcon 9 starlink 6-64,22:43 utc,5/31/2024,delay,scheduling
+Cape Canaveral,falcon 9 starlink 6-60,14:24 utc,5/28/2024,success,
+Cape Canaveral,falcon 9 starlink 6-60,12:30 utc,5/27/2024,delay,technical
+Cape Canaveral,falcon 9 starlink 6-63,02:30 utc,5/24/2024,success,
+Cape Canaveral,falcon 9 starlink 6-63,22:45 utc,5/23/2024,delay,weather
+Cape Canaveral,falcon 9 starlink 6-62,02:33 utc,5/23/2024,success,
+Cape Canaveral,falcon 9 starlink 6-59,23:52 utc,5/17/2024,success,
+Cape Canaveral,falcon 9 starlink 6-58,00:53 utc,5/13/2024,success,
+Cape Canaveral,falcon 9 starlink 6-56,16:42 utc,5/8/2024,success,
+Cape Canaveral,atlas v cft,02:29 utc,5/7/2024,delay,technical
+Cape Canaveral,falcon 9 starlink 6-57,18:14 utc,5/6/2024,success,
+Cape Canaveral,falcon 9 starlink 6-55,02:37 utc,5/3/2024,success,
+Cape Canaveral,falcon 9 starlink 6-54,22:08 utc,4/28/2024,success,
+Cape Canaveral,falcon 9 galileo,00:34 utc,4/28/2024,success,
+Cape Canaveral,falcon 9 starlink 6-53,22:15 utc,4/23/2024,success,
+Cape Canaveral,falcon 9 starlink 6-52,22:40 utc,4/18/2024,success,
+Cape Canaveral,falcon 9 starlink 6-51,21:24 utc,4/17/2024,success,
+Cape Canaveral,falcon 9 starlink 6-49,01:40 utc,4/13/2024,success,
+Cape Canaveral,falcon 9 starlink 6-48,05:40 utc,4/10/2024,success,
+Cape Canaveral,delta iv-h nrol-70,16:53 utc,4/9/2024,success,
+Cape Canaveral,falcon 9 starlink 6-47,09:14 utc,4/5/2024,success,
+Cape Canaveral,falcon 9 eutelsat 36x,21:52 utc,3/30/2024,success,
+Cape Canaveral,starlink 6-45,01:00 utc,3/31/2024,success,
+Cape Canaveral,delta iv-h nrol-70,17:40 utc,3/28/2024,delay,technical
+Cape Canaveral,falcon 9 starlink 6-46,23:42 utc,3/25/2024,success,
+Cape Canaveral,falcon 9 starlink 6-42,0309 utc,3/24/2024,success,
+Cape Canaveral,falcon 9 starlink 6-42,23:55 utc,3/22/2024,delay,weather
+Cape Canaveral,falcon 9 crs-30,20:49 utc,3/21/2024,success,
+Cape Canaveral,falcon 9 starlink 6-44,00:21 utc,3/15/2024,success,
+Cape Canaveral,falcon 9 starlink 6-44,23:04 utc,3/14/2024,delay,technical
+Cape Canaveral,falcon 9 starlink 6-44,23:29 utc,3/13/2024,delay,technical
+Cape Canaveral,falcon 9 starlink 6-43,23:05 utc,3/10/2024,success,
+Cape Canaveral,falcon 9 starlink 6-41,23:54 utc,3/4/2024,success,
+Cape Canaveral,starlink 6-40,15:30 utc,2/29/2024,success,
+Cape Canaveral,nasa crew 8,04:59 utc,3/4/2024,success,
+Cape Canaveral,nasa crew 8,04:59 utc,3/3/2024,delay,weather
+Cape Canaveral,falcon 9 starlink 6-39,22:06 utc,2/24/2024,success,
+Cape Canaveral,falcon 9 telkomsat-113bt,20:11 utc,2/20/2024,success,
+Cape Canaveral,falcon 9 intuitive machines-1,06:05 utc,2/15/2024,success,
+Cape Canaveral,falcon 9 intuitive machines-1,05:52 utc,2/14/2024,delay,technical
+Cape Canaveral,falcon 9 ussf-124,22:30 utc,2/14/2024,success,
+Cape Canaveral,falcon 9 pace,06:33 utc,2/8/2024,success,
+Cape Canaveral,falcon 9 pace,06:25 utc,2/7/2024,delay,weather
+Cape Canaveral,falcon 9 pace,06:25 utc,2/6/2024,delay,weather
+Cape Canaveral,falcon 9 cygnus ng-20,17:07 utc,1/30/2024,success,
+Cape Canaveral,starlink 6-38,01:10 utc,1/29/2024,success,
+Cape Canaveral,starlink 6-38,23:04 utc,1/28/2024,delay,weather
+Cape Canaveral,falcon 9 axiom-3,21:49 utc,1/18/2024,success,
+Cape Canaveral,falcon 9 axiom-3,22:11 utc,1/17/2024,delay,technical
+Cape Canaveral,falcon 9 starlink 6-37,01:52 utc,1/15/2024,success,
+Cape Canaveral,falcon 9 starlink 6-37,00:27 utc,1/15/2024,delay,weather
+Cape Canaveral,falcon 9 starlink 6-35,22:35 utc,1/7/2024,success,
+Cape Canaveral,falcon 9 starlink 6-35,21:00 utc,1/7/2024,delay,scheduling
+Cape Canaveral,vulcan peregrine,07:18 utc,1/8/2024,success,

@@ -1,6 +1,7 @@
 django
-psycopg2
+psycopg2-binary
 requests
+setuptools
 bs4
 dpd_static_support
 bootstrap4
@@ -14,6 +15,7 @@ django-bootstrap-v5
 dash_core_components
 dash_html_components
 dash_bootstrap_components
+python-dotenv
 scipy
 colour
 matplotlib

@@ -1,0 +1,186 @@
+falcon_9:
+    max_launchpad_wind: 
+        include: true
+        value: 26 #knots
+    thunderstorm:
+        include: true
+        value: 10 #miles
+    thunderstorm_cooldown: 
+        include: true
+        value: .5 #hours
+    max_wind_shear: 
+        include: true
+        value: 26 #knots
+    max_precipitation:
+        include: true
+        value: "low" #low, mod, high
+    min_cloud_temp:
+        include: true
+        value: 0 #celcius
+    min_ceiling:
+        include: false
+        value:  #feet
+    min_visibility:
+        include: false
+        value:  #miles
+    min_launchpad_temp:
+        include: false
+        value:  #celcius
+    max_launchpad_temp:
+        include: false
+        value:  #celcius
+atlas_v:
+    max_launchpad_wind: 
+        include: true
+        value: 33 #knots
+    thunderstorm:
+        include: true
+        value: 10 #miles
+    thunderstorm_cooldown: 
+        include: true
+        value: .5 #hours
+    max_wind_shear: 
+        include: true
+        value: 33 #knots
+    max_precipitation:
+        include: true
+        value: "low" #low, mod, high
+    min_cloud_temp:
+        include: true
+        value: 0 #Celcius
+    min_ceiling:
+        include: false
+        value: 6000 #feet
+    min_visibility:
+        include: false
+        value: 4 #miles
+    min_launchpad_temp:
+        include: false
+        value:  #celcius
+    max_launchpad_temp:
+        include: false
+        value:  #celcius
+ares_i_x:
+    max_launchpad_wind: 
+        include: true
+        value: 20 #knots
+    thunderstorm:
+        include: true
+        value: 10 #miles
+    thunderstorm_cooldown: 
+        include: true
+        value: .5 #hours
+    max_wind_shear: 
+        include: true
+        value: 20 #knots
+    max_precipitation:
+        include: true
+        value: "low" #low, mod, high
+    min_cloud_temp:
+        include: true
+        value: 0 #celcius
+    min_ceiling:
+        include: false
+        value:  #feet
+    min_visibility:
+        include: false
+        value:  #miles
+    min_launchpad_temp:
+        include: false
+        value: 2.22 #celcius
+    max_launchpad_temp:
+        include: false
+        value: 35 #celcius
+artemis_i:
+    max_launchpad_wind: 
+        include: true
+        value: 29 #knots
+    thunderstorm:
+        include: true
+        value: 10 #miles
+    thunderstorm_cooldown: 
+        include: true
+        value: .5 #hours
+    max_wind_shear: 
+        include: true
+        value: 29 #knots
+    max_precipitation:
+        include: true
+        value: "low" #low, mod, high
+    min_cloud_temp:
+        include: true
+        value: 0 #celcius
+    min_ceiling:
+        include: false
+        value:  #feet
+    min_visibility:
+        include: false
+        value:  #miles
+    min_launchpad_temp:
+        include: true
+        value: 5.2 #celcius
+    max_launchpad_temp:
+        include: true
+        value: 34.7 #celcius
+delta_ii:
+    max_launchpad_wind: 
+        include: true
+        value: 28 #knots
+    thunderstorm:
+        include: true
+        value: 10 #miles
+    thunderstorm_cooldown: 
+        include: true
+        value: .5 #hours
+    max_wind_shear: 
+        include: true
+        value: 28 #knots
+    max_precipitation:
+        include: true
+        value: "low" #low, mod, high
+    min_cloud_temp:
+        include: true
+        value: 0 #celcius
+    min_ceiling:
+        include: false
+        value:  #feet
+    min_visibility:
+        include: false
+        value:  #miles
+    min_launchpad_temp:
+        include: false
+        value:  #celcius
+    max_launchpad_temp:
+        include: false
+        value:  #celcius
+space_shuttle:
+    max_launchpad_wind: 
+        include: true
+        value: 19 #knots
+    thunderstorm:
+        include: true
+        value: 10 #miles
+    thunderstorm_cooldown: 
+        include: true
+        value: .5 #hours
+    max_wind_shear: 
+        include: true
+        value: 19 #knots
+    max_precipitation:
+        include: true
+        value: "low" #low, mod, high
+    min_cloud_temp:
+        include: true
+        value: 0 #celcius
+    min_ceiling:
+        include: true
+        value: 8000 #feet
+    min_visibility:
+        include: false
+        value:  #miles
+    min_launchpad_temp:
+        include: true
+        value: 5 #celcius
+    max_launchpad_temp:
+        include: true
+        value: 37.2 #celcius

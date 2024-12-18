@@ -6,7 +6,7 @@ An application to help correlate weather data with when you should plan sorties
 Sorties are often planned without much data/insight as to how weather has historically affected launches.
 We propose a simple open platform that will ingest historical weather data, and show data along with a 'heatmap' of ideal timeframes for when to launch sorties to prevent interference from weather.
 
-![weathermap](heatmap.jpeg)
+![weathermap](https://github.com/skorm11x/flight-weather-heatmap/blob/Dev/assets/img/heatmap.jpeg)
 
 ## Data Sources Used
 https://climate.af.mil and the 14th weather squadron
@@ -18,7 +18,7 @@ You will also need to create a map box api token in order for theme changing to 
 
 DOCKER
 From the root directory of the repository, run
-```docker-compose up```
+```docker-compose up``` add ```--build``` if needed to rebuild the containers from scratch 
 
 LOCAL
 From the ./wasp directory
@@ -26,9 +26,12 @@ From the ./wasp directory
 LOCAL TESTS
 ```python manage.py test```
 
+DJANGO TEST
+```python manage.py wasp.django_tests```
+
 ### Access the GUI
 Find the port used in mange.py or in the docker-compose.yml file.
-Example if docker compose was used: Go to browser and type ```http://localhost:8000```
+Example if docker compose was used: Go to browser and type ```http://localhost:8000/heatmap```
 
 ## Explanation of Folders/files
 ./wasp : houses the heatmap and wasp python applications
@@ -52,3 +55,17 @@ All weather data and aircraft data used is publically available.
 - Convert the project to NPM to help reduce the amount of remote libraries accessed by the application
 - Change maps provider to something that can be hosted locally to aid in air-gapped deployments
 - Formal REST APIs allowing for CRUD operations with the database.
+
+### Other Helpful Tips
+Ensure that you use a python virtual environment to better manage libraries. Libraries used in application containers should be noted in requirements.txt
+```
+# install virtual env & set up env
+apt install python3-virtualenv
+virtualenv weatherHeatmap
+source weatherHeatmap/bin/activate
+# install dependencies
+pip3 install django
+```
+
+Exec into docker container
+```docker exec -it <container ID> sh```

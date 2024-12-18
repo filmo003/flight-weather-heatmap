@@ -3,8 +3,8 @@ from django.db import models
 
 # Create your models here.
 class Weather(models.Model):
-    station_id = models.CharField(max_length=32, default='DEFAULT')
-    base_text = models.CharField(max_length=512, default='DEFAULT')
+    station_id = models.CharField(max_length=32, default="DEFAULT")
+    base_text = models.CharField(max_length=512, default="DEFAULT")
     latitude = models.FloatField(default=999)
     longitude = models.FloatField(default=999)
     year = models.IntegerField(default=999)

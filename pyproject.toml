@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "flight-weather-heatmap"
+version = "0.0.1"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+numpy = ">=1.22.3,<2.0.0"
+django = ">=2.2,<5.0"
+dash = ">=2.0,<2.10"
+psycopg2-binary = "^2.9.9"
+requests = "^2.32.3"
+bs4 = "^0.0.2"
+dpd-static-support = "^0.0.5"
+bootstrap4 = "^0.1.0"
+pandas = "^2.2.3"
+django-plotly-dash = "^2.3.1"
+werkzeug = "^3.0.4"
+openpyxl = "^3.1.5"
+django-bootstrap-v5 = "^1.0.11"
+dash-core-components = "^2.0.0"
+dash-html-components = "^2.0.0"
+dash-bootstrap-components = "^1.6.0"
+scipy = "^1.14.1"
+colour = "^0.1.5"
+matplotlib = "^3.9.2"
+plotly-calplot = "^0.1.20"
+setuptools = "^75.1.0"
+python-dotenv = "^1.0.1"
+pyyaml = "^6.0.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pylint = "^3.3.1"
+black = "^24.10.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
